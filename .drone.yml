@@ -1,0 +1,26 @@
+kind: pipeline
+name: default
+
+steps:
+- name: tests
+  image: golang
+  commands:
+  - go mod download
+  - go build
+  - go test ./...
+
+- name: notify
+  image: plugins/matrix
+  settings:
+    homeserver:
+      from_secret: matrix_server
+    roomid: 
+      from_secret: matrix_roomid
+    username:
+      from_secret: matrix_username
+    password:
+      from_secret: matrix_password
+  when:
+    status:
+    - failure
+
