@@ -90,7 +90,11 @@ func (e *Error) Cause() string {
 }
 
 func (e *Error) Error() string {
-	return e.Err.Error()
+	if e.Err == nil {
+		return e.Message
+	} else {
+		return e.Err.Error()
+	}
 }
 
 func (e *Error) EndUserError() (string, error) {

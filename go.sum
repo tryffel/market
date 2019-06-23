@@ -1,6 +1,7 @@
 github.com/akamensky/argparse v0.0.0-20190309155458-28b0496b54cb h1:PbYR84S3iyS6IxmIhdUb9GsMdlnJMNn3LFJ4U1iZC+M=
 github.com/akamensky/argparse v0.0.0-20190309155458-28b0496b54cb/go.mod h1:pdh+2piXurh466J9tqIqq39/9GO2Y8nZt6Cxzu18T9A=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/go-ini/ini v1.42.0 h1:TWr1wGj35+UiWHlBA8er89seFXxzwFn11spilrrj+38=
 github.com/go-ini/ini v1.42.0/go.mod h1:ByCAeIL28uOIIG0E3PJtZPDL8WnHpFKFOtgjp+3Ies8=
