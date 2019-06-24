@@ -35,3 +35,10 @@ func (h *HttpRequest) RealIp() string {
 func (h *HttpRequest) UserAgent() string {
 	return h.request.UserAgent()
 }
+
+func NewHttp(r *http.Request) Request {
+	return &HttpRequest{
+		request: r,
+	}
+
+}

@@ -10,6 +10,8 @@ import (
 	"github.com/tryffel/market/storage/models"
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -49,6 +51,8 @@ func main() {
 	}
 
 	c, err := config.ReadConfig(*configFile)
+	c.AddDefaults()
+	c.SaveFile(*configFile)
 	service, err := cmd.NewService(c)
 	if err != nil {
 		e := Error.Wrap(&err, "failed to start market server")
@@ -86,6 +90,11 @@ func main() {
 		os.Exit(1)
 	}
 	service.Start()
+
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+	signal.Notify(ch, os.Interrupt, syscall.SIGINT)
+	<-ch
 	service.Stop()
 
 	c.Logging.Directory = "2"

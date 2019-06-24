@@ -2,13 +2,19 @@ package config
 
 import "github.com/tryffel/market/modules/util"
 
+const (
+	ApiV1BasePath       = "/api/v1"
+	AuthorizationHeader = "Authorization"
+)
+
 // Config has complete application configuration
 type Config struct {
-	Database Database    `yaml:"database"`
-	Minio    Minio       `yaml:"minio"`
-	Api      ApiEndpoint `yaml:"api_endpoint"`
-	Logging  Logging     `yaml:"logging"`
-	Tokens   Tokens      `yaml:"tokens"`
+	Database  Database    `yaml:"database"`
+	Minio     Minio       `yaml:"minio"`
+	Api       ApiEndpoint `yaml:"api_endpoint"`
+	Logging   Logging     `yaml:"logging"`
+	Tokens    Tokens      `yaml:"tokens"`
+	S3Gateway S3Gateway   `yaml:"gateway_s3"`
 }
 
 type ApiEndpoint struct {
@@ -44,4 +50,9 @@ type Minio struct {
 	Bucket    string `yaml:"bucket"`
 	AccessKey string `yaml:"access_key"`
 	SecretKey string `yaml:"secret_key"`
+}
+
+type S3Gateway struct {
+	Enabled  bool   `yaml:"enabled"`
+	ListenTo string `yaml:"listen_to"`
 }

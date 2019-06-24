@@ -10,9 +10,11 @@ import (
 )
 
 type Store struct {
-	db    *Database
-	User  repositories.User
-	Group repositories.Group
+	db       *Database
+	Document repositories.Document
+	User     repositories.User
+	Group    repositories.Group
+	Setting  repositories.Setting
 }
 
 func NewStore(conf *config.Config, logger *logger.SqlLogger) (*Store, error) {
@@ -26,9 +28,14 @@ func NewStore(conf *config.Config, logger *logger.SqlLogger) (*Store, error) {
 
 	s.User = repository_impl.NewUserRepository(s.GetDbEngine())
 	s.Group = repository_impl.NewGroupRepository(s.GetDbEngine())
+	s.Setting = repository_impl.NewSettingRepository(s.GetDbEngine())
 	return s, nil
 }
 
 func (s *Store) GetDbEngine() *gorm.DB {
 	return s.db.GetEngine()
+}
+
+func (s *Store) Close() error {
+	return s.db.Close()
 }
