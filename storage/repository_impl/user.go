@@ -2,8 +2,6 @@ package repository_impl
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/tryffel/market/modules/Error"
-	"github.com/tryffel/market/modules/auth"
 	"github.com/tryffel/market/storage/models"
 	"github.com/tryffel/market/storage/repositories"
 	"strings"
@@ -13,12 +11,18 @@ type UserRepository struct {
 	db *gorm.DB
 }
 
-func (u *UserRepository) Create(user *models.User, password string) error {
-	hash, err := auth.GetPasswordHash(password)
-	if err != nil {
-		return Error.Wrap(&err, "failed to hash new password")
-	}
-	user.Password = hash
+func (u *UserRepository) Search(text string, userId string, paging repositories.Paging) (*[]models.User, error) {
+	// TODO: limit to common groups
+	lower := strings.ToLower(text)
+	query := u.db.Where("id LIKE %?% or lower_name LIKE %?% or email LIKE %?%", lower)
+	query = PagedSorted(query, paging)
+	users := &[]models.User{}
+	res := query.Find(&users)
+	return users, getDatabaseError(res.Error)
+}
+
+func (u *UserRepository) Create(user *models.User, passwordHash string) error {
+	user.Password = passwordHash
 	res := u.db.Create(&user).Error
 	return getDatabaseError(res)
 }
@@ -50,12 +54,8 @@ func (u *UserRepository) FindByName(name string) (*models.User, error) {
 	return user, getDatabaseError(res.Error)
 }
 
-func (u *UserRepository) UpdatePassword(user *models.User, password string) error {
-	hash, err := auth.GetPasswordHash(password)
-	if err != nil {
-		return Error.Wrap(&err, "failed to hash new password")
-	}
-	user.Password = hash
+func (u *UserRepository) UpdatePassword(user *models.User, passwordHash string) error {
+	user.Password = passwordHash
 	res := u.db.Create(&user).Error
 	return getDatabaseError(res)
 }

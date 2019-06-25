@@ -15,6 +15,7 @@ var tokenKeyLength = 80
 var LogMainFile = "market.log"
 var LogSqlFile = "sql.log"
 var ApiListenTo = "127.0.0.1:8080"
+var ApiTimeouts = util.NewInterval(time.Second * 15)
 var S3GatewayListenTo = "120.0.0.1:8085"
 
 func (c *Config) AddDefaults() {
@@ -25,6 +26,13 @@ func (c *Config) AddDefaults() {
 
 	if c.Api.ListenTo == "" {
 		c.Api.ListenTo = ApiListenTo
+	}
+
+	if c.Api.WriteTimeout <= 0 {
+		c.Api.WriteTimeout = ApiTimeouts
+	}
+	if c.Api.ReadTimeout <= 0 {
+		c.Api.ReadTimeout = ApiTimeouts
 	}
 
 	if c.S3Gateway.ListenTo == "" {

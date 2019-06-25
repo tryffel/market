@@ -18,8 +18,10 @@ type Config struct {
 }
 
 type ApiEndpoint struct {
-	ListenTo string `yaml:"listen_to"`
-	BaseUrl  string `yaml:"base_url"`
+	ListenTo     string        `yaml:"listen_to"`
+	BaseUrl      string        `yaml:"base_url"`
+	WriteTimeout util.Interval `yaml:"write_timeout"`
+	ReadTimeout  util.Interval `yaml:"read_timeout"`
 }
 
 type Logging struct {

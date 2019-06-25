@@ -26,7 +26,7 @@ func Ok(msg string, resp Response) error {
 }
 
 func BadRequest(errMsg string, resp Response) error {
-	return resp.Write([]byte(fmt.Sprintf(`"Error": "%s"`, errMsg)), StatusBadRequest)
+	return resp.Write([]byte(fmt.Sprintf(`{"Error": "%s"}`, errMsg)), StatusBadRequest)
 }
 
 func Forbidden(resp Response) error {

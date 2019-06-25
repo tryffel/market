@@ -5,15 +5,19 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/tryffel/market/config"
 	"github.com/tryffel/market/modules/Error"
+	"github.com/tryffel/market/modules/auth"
 	"github.com/tryffel/market/modules/response"
 	"github.com/tryffel/market/storage"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type Auth struct {
-	store *storage.Store
-	pKey  string
+	store          *storage.Store
+	pKey           string
+	validateExpiry bool
+	expiryDuration time.Duration
 }
 
 // NewAuth creates new auth instance
@@ -27,6 +31,8 @@ func NewAuth(config *config.Config, store *storage.Store) (Auth, error) {
 	}
 
 	auth.pKey = config.Tokens.Key
+	auth.validateExpiry = config.Tokens.Expire
+	auth.expiryDuration = config.Tokens.Interval.ToDuration()
 	return *auth, nil
 }
 
@@ -53,6 +59,17 @@ func (a *Auth) Authorize(next http.Handler) http.Handler {
 			return
 		}
 
-		next.ServeHTTP(w, r)
+		valid, _, err := auth.ValidateToken(parts[1], a.pKey, a.validateExpiry, a.expiryDuration)
+		if err != nil {
+			response.BadRequest("Invalid token", resp)
+			return
+		}
+		if valid != "" && err == nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+		response.BadRequest("Invalid token", resp)
+		return
+
 	})
 }
